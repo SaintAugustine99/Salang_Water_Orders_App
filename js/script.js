@@ -4,7 +4,7 @@ const appConfig = {
     testMode: false,
     
     // API endpoint for production - Update with your Netlify function URL
-    apiEndpoint: 'https://your-site-name.netlify.app/api/create-order',
+    apiEndpoint: 'https://salangwater.com'
     
     // Simulated response delay in milliseconds (for test mode)
     testDelay: 1500
