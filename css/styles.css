@@ -173,3 +173,20 @@ input:focus, select:focus, textarea:focus {
         font-size: 24px;
     }
 }
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.loading-spinner i {
+    color: #3498db;
+}
+
+.attribution {
+    font-size: 12px;
+    color: #7f8c8d;
+    text-align: center;
+    margin-top: 16px;
+}

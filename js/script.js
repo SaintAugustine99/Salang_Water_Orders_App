@@ -1,3 +1,15 @@
+// Configuration
+const appConfig = {
+    // Set to true to test without a backend
+    testMode: true,
+    
+    // API endpoint for production
+    apiEndpoint: 'https://yourdomain.com/api/create-order/',
+    
+    // Simulated response delay in milliseconds (for test mode)
+    testDelay: 1500
+};
+
 // Phone number formatting for Kenyan numbers
 document.getElementById('phone').addEventListener('input', function (e) {
     // Remove any non-digit characters
@@ -26,76 +38,190 @@ document.addEventListener('DOMContentLoaded', function() {
     phoneInput.setAttribute('placeholder', '0722 123 456 or 254722 123 456');
 });
 
-// Geolocation function
+// Geolocation function without Google Maps dependency
 function getLocation() {
     const status = document.getElementById('locationStatus');
     const addressField = document.getElementById('address');
     
+    // Check if geolocation is supported
     if (!navigator.geolocation) {
         status.textContent = 'Geolocation is not supported by your browser';
+        status.style.color = '#e74c3c';
         return;
     }
 
     status.textContent = 'Locating...';
+    status.style.color = '#3498db'; // Info color
     
     navigator.geolocation.getCurrentPosition(
         (position) => {
+            // Get coordinates
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
             
-            // Use Google Maps Geocoding API to get the address
-            const geocoder = new google.maps.Geocoder();
-            const latlng = {
-                lat: parseFloat(latitude),
-                lng: parseFloat(longitude)
-            };
+            // Use coordinates directly since we don't have Google Maps for geocoding
+            addressField.value = `Location Coordinates: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
             
-            geocoder.geocode({ 'location': latlng }, function(results, geocodeStatus) {
-                if (geocodeStatus === 'OK') {
-                    if (results[0]) {
-                        // Get the formatted address
-                        const formattedAddress = results[0].formatted_address;
-                        addressField.value = formattedAddress;
-                        status.textContent = 'Location found successfully!';
-                        status.style.color = '#27ae60';
-                    } else {
-                        status.textContent = 'No address found for this location';
-                        status.style.color = '#e74c3c';
-                    }
-                } else {
-                    status.textContent = 'Could not convert coordinates to address';
-                    status.style.color = '#e74c3c';
-                    // Fallback to coordinates
-                    addressField.value = `Latitude: ${latitude.toFixed(6)}, Longitude: ${longitude.toFixed(6)}`;
-                }
-            });
+            // Try to use a free reverse geocoding service if available
+            tryReverseGeocode(latitude, longitude, addressField, status);
+            
+            // Set success status
+            status.textContent = 'Location coordinates captured successfully!';
+            status.style.color = '#27ae60'; // Success color
         },
         (error) => {
-            status.textContent = 'Unable to retrieve location: ' + error.message;
-            status.style.color = '#e74c3c';
-            console.error(error);
+            handleLocationError(error, status);
+        },
+        { 
+            enableHighAccuracy: true, 
+            timeout: 10000, 
+            maximumAge: 0 
         }
     );
 }
 
-// Form submission
-document.getElementById('orderForm').addEventListener('submit', function(e) {
+// Optional: Try to use a free reverse geocoding service
+function tryReverseGeocode(latitude, longitude, addressField, statusElement) {
+    // Using OpenStreetMap Nominatim API (free but has usage limits)
+    // Be sure to add proper attribution if you use this in production
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+    
+    fetch(url, {
+        headers: {
+            // Add a user agent as required by Nominatim's usage policy
+            'User-Agent': 'SalangWaterRefillApp/1.0'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Geocoding service unavailable');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data && data.display_name) {
+            // Success - we have an address
+            addressField.value = data.display_name;
+            statusElement.textContent = 'Address found successfully!';
+            statusElement.style.color = '#27ae60'; // Success color
+        } else {
+            throw new Error('No address found');
+        }
+    })
+    .catch(error => {
+        console.warn('Could not get address from coordinates:', error);
+        // Keep the coordinates as fallback - we already set this value earlier
+        statusElement.textContent += ' (Address lookup unavailable)';
+        statusElement.style.color = '#f39c12'; // Warning color
+    });
+}
+
+// Helper function to handle location errors
+function handleLocationError(error, statusElement) {
+    statusElement.style.color = '#e74c3c'; // Error color
+    
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            statusElement.textContent = 'Location access denied. Please enable location services.';
+            break;
+        case error.POSITION_UNAVAILABLE:
+            statusElement.textContent = 'Location information is unavailable.';
+            break;
+        case error.TIMEOUT:
+            statusElement.textContent = 'Location request timed out.';
+            break;
+        default:
+            statusElement.textContent = 'Unknown error occurred while getting location.';
+            break;
+    }
+    console.error(error);
+}
+
+// Form validation function
+function validateForm() {
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.replace(/\D/g, '');
+    const quantity = document.getElementById('quantity').value;
+    const address = document.getElementById('address').value.trim();
+    
+    let isValid = true;
+    let errorMessage = '';
+    
+    // Validate name
+    if (name === '') {
+        errorMessage = 'Please enter your full name.';
+        isValid = false;
+    }
+    
+    // Validate phone (must be at least 10 digits)
+    else if (phone.length < 10) {
+        errorMessage = 'Please enter a valid phone number.';
+        isValid = false;
+    }
+    
+    // Validate quantity
+    else if (quantity === '') {
+        errorMessage = 'Please select the number of bottles.';
+        isValid = false;
+    }
+    
+    // Validate address
+    else if (address === '') {
+        errorMessage = 'Please enter your delivery address.';
+        isValid = false;
+    }
+    
+    // Display error message if validation fails
+    if (!isValid) {
+        alert(errorMessage);
+    }
+    
+    return isValid;
+}
+
+// Modal functions
+function showModal(id) {
+    document.getElementById(id).style.display = 'flex';
+}
+
+function closeModal() {
+    // Close all modals
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.style.display = 'none';
+    });
+}
+
+// Close modal when clicking outside of modal content
+window.addEventListener('click', function(event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+
+// Handle form submission
+function handleFormSubmission(e) {
     e.preventDefault();
     
-    // Show loading state
-    const submitBtn = document.querySelector('.submit-btn');
-    const originalBtnText = submitBtn.textContent;
-    submitBtn.textContent = 'Processing...';
-    submitBtn.disabled = true;
+    // Validate form
+    if (!validateForm()) {
+        return; // Stop if validation fails
+    }
+    
+    // Show loading modal
+    showModal('loadingModal');
     
     // Collect form data
     const formData = {
-        name: document.getElementById('name').value,
+        name: document.getElementById('name').value.trim(),
         phone: document.getElementById('phone').value.replace(/\D/g, ''), // Remove spaces and formatting
-        email: document.getElementById('email').value,
+        email: document.getElementById('email').value.trim(),
         quantity: document.getElementById('quantity').value,
-        address: document.getElementById('address').value,
-        notes: document.getElementById('notes').value
+        address: document.getElementById('address').value.trim(),
+        notes: document.getElementById('notes').value.trim()
     };
     
     // Format phone number for backend
@@ -104,38 +230,56 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
         formData.phone = '254' + formData.phone.substring(1);
     }
     
-    // Send data to backend
-    fetch('https://yourdomain.com/api/create-order/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Success:', data);
+    if (appConfig.testMode) {
+        // Simulate server response in test mode
+        console.log('Test mode active - Form data:', formData);
         
-        // Show confirmation modal
-        document.getElementById('confirmationModal').style.display = 'flex';
-        
-        // Reset form
-        document.getElementById('orderForm').reset();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        
-        // Show error message
-        alert('There was an error submitting your order. Please try again.');
-    })
-    .finally(() => {
-        // Reset button state
-        submitBtn.textContent = originalBtnText;
-        submitBtn.disabled = false;
-    });
-});
+        setTimeout(() => {
+            console.log('Test mode - Order simulated successfully');
+            
+            // Hide loading and show confirmation
+            closeModal();
+            showModal('confirmationModal');
+            
+            // Reset form
+            document.getElementById('orderForm').reset();
+        }, appConfig.testDelay);
+    } else {
+        // Real API call for production
+        fetch(appConfig.apiEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+            
+            // Hide loading and show confirmation
+            closeModal();
+            showModal('confirmationModal');
+            
+            // Reset form
+            document.getElementById('orderForm').reset();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            
+            // Hide loading modal
+            closeModal();
+            
+            // Show error message
+            alert(`There was an error submitting your order: ${error.message}`);
+        });
+    }
+}
+
+// Add event listener to form
+document.getElementById('orderForm').addEventListener('submit', handleFormSubmission);
