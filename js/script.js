@@ -1,10 +1,10 @@
 // Configuration
 const appConfig = {
-    // Set to true to test without a backend
-    testMode: true,
+    // Set to false when your Netlify function is ready
+    testMode: false,
     
-    // API endpoint for production
-    apiEndpoint: 'https://yourdomain.com/api/create-order/',
+    // API endpoint for production - Update with your Netlify function URL
+    apiEndpoint: 'https://your-site-name.netlify.app/api/create-order',
     
     // Simulated response delay in milliseconds (for test mode)
     testDelay: 1500
@@ -31,10 +31,11 @@ document.getElementById('phone').addEventListener('input', function (e) {
     }
 });
 
-// Update the HTML pattern attribute for the phone input
+// Remove pattern attribute and just set placeholder
 document.addEventListener('DOMContentLoaded', function() {
     const phoneInput = document.getElementById('phone');
-    phoneInput.setAttribute('pattern', '(254|0)[0-9]{9}');
+    // Remove the pattern attribute entirely
+    phoneInput.removeAttribute('pattern');
     phoneInput.setAttribute('placeholder', '0722 123 456 or 254722 123 456');
 });
 
@@ -137,10 +138,11 @@ function handleLocationError(error, statusElement) {
     console.error(error);
 }
 
-// Form validation function
+// Improved form validation function for phone numbers
 function validateForm() {
     const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.replace(/\D/g, '');
+    const phoneWithSpaces = document.getElementById('phone').value;
+    const phone = phoneWithSpaces.replace(/\D/g, ''); // Remove non-digits
     const quantity = document.getElementById('quantity').value;
     const address = document.getElementById('address').value.trim();
     
@@ -153,9 +155,9 @@ function validateForm() {
         isValid = false;
     }
     
-    // Validate phone (must be at least 10 digits)
-    else if (phone.length < 10) {
-        errorMessage = 'Please enter a valid phone number.';
+    // Validate phone (must be at least 10 digits and start with 0 or 254)
+    else if (phone.length < 10 || !(phone.startsWith('0') || phone.startsWith('254'))) {
+        errorMessage = 'Please enter a valid Kenyan phone number starting with 0 or 254.';
         isValid = false;
     }
     
