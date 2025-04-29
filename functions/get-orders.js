@@ -1,5 +1,6 @@
 // functions/get-orders.js
-const { getJsonData } = require('./util/db-helpers');
+const fs = require('fs');
+const path = require('path');
 
 // CORS headers
 const headers = {
@@ -7,6 +8,50 @@ const headers = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Access-Control-Allow-Methods': 'GET, OPTIONS'
 };
+
+// Define the data directory path
+const DATA_DIR = path.join(__dirname, '..', '.data');
+const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
+const TMP_ORDERS_FILE = path.join('/tmp', 'orders.json');
+
+// Ensure the data directory exists
+function ensureDataDirExists() {
+  if (!fs.existsSync(DATA_DIR)) {
+    try {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    } catch (error) {
+      console.error('Failed to create data directory:', error);
+    }
+  }
+}
+
+// Get orders from file
+async function getOrders() {
+  ensureDataDirExists();
+  
+  // Try to read from primary location
+  if (fs.existsSync(ORDERS_FILE)) {
+    try {
+      const data = await fs.promises.readFile(ORDERS_FILE, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Error reading orders file:', error);
+    }
+  }
+  
+  // Try to read from /tmp backup
+  if (fs.existsSync(TMP_ORDERS_FILE)) {
+    try {
+      const data = await fs.promises.readFile(TMP_ORDERS_FILE, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Error reading backup orders file:', error);
+    }
+  }
+  
+  // If all fails, return empty array
+  return [];
+}
 
 exports.handler = async function(event, context) {
   // Handle preflight OPTIONS request
@@ -27,9 +72,9 @@ exports.handler = async function(event, context) {
     };
   }
   
-  // Check for authentication
+  // Simple token checking - any non-empty token is accepted
   const authHeader = event.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.startsWith('Bearer ') || !authHeader.split(' ')[1]) {
     return {
       statusCode: 401,
       headers,
@@ -37,16 +82,9 @@ exports.handler = async function(event, context) {
     };
   }
   
-  // Extract JWT token
-  const token = authHeader.split(' ')[1];
-  
-  // Verify identity
   try {
-    // In a production environment, you should verify this token with Netlify Identity
-    // For now, we'll assume it's valid if it exists
-    
-    // Get orders from database
-    const orders = await getJsonData('orders.json');
+    // Get orders from file
+    const orders = await getOrders();
     
     return {
       statusCode: 200,
@@ -65,7 +103,7 @@ exports.handler = async function(event, context) {
       headers,
       body: JSON.stringify({
         error: 'Internal server error',
-        message: error.message
+        message: error.message || 'Unknown error occurred'
       })
     };
   }
