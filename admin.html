@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salang Water - Admin Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <link rel="stylesheet" href="css/admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="header">
+            <h1>Salang Water Admin</h1>
+            <p>Order Management Dashboard</p>
+            <div id="user-info">
+                <span id="current-user">Not logged in</span>
+                <button id="logout-btn" onclick="netlifyIdentity.logout()">Logout</button>
+            </div>
+        </div>
+
+        <div id="login-section" class="login-container">
+            <h2>Admin Login</h2>
+            <p>Please log in to access the admin dashboard</p>
+            <button class="login-btn" onclick="netlifyIdentity.open()">Login with Netlify Identity</button>
+        </div>
+
+        <div id="dashboard" class="dashboard-container" style="display:none;">
+            <div class="dashboard-header">
+                <h2>Orders Overview</h2>
+                <div class="filters">
+                    <select id="status-filter">
+                        <option value="all">All Orders</option>
+                        <option value="new">New Orders</option>
+                        <option value="processing">Processing</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <input type="date" id="date-filter" placeholder="Filter by date">
+                    <button id="refresh-btn" class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="orders-table-container">
+                <table id="orders-table" class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Quantity</th>
+                            <th>Address</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-data">
+                        <!-- Orders will be loaded here -->
+                    </tbody>
+                </table>
+                <div id="loading-indicator" class="loading-indicator">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    <p>Loading orders...</p>
+                </div>
+                <div id="no-orders" class="no-orders" style="display:none;">
+                    <p>No orders found</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="order-details-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Order Details</h3>
+                <div id="order-details-content"></div>
+                <div class="status-update">
+                    <label for="update-status">Update Status:</label>
+                    <select id="update-status">
+                        <option value="new">New</option>
+                        <option value="processing">Processing</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <button id="save-status" class="save-btn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
