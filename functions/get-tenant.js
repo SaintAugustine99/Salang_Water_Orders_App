@@ -1,12 +1,11 @@
-// functions/update-tenant-bill.js
-const { getData, saveData } = require('./util/db-helpers');
-const jwt = require('jsonwebtoken');
+// functions/get-tenant.js
+const { getData } = require('./util/db-helpers');
 
 // CORS headers
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  'Access-Control-Allow-Methods': 'GET, OPTIONS'
 };
 
 exports.handler = async function(event, context) {
@@ -19,8 +18,8 @@ exports.handler = async function(event, context) {
     };
   }
   
-  // Only allow POST requests
-  if (event.httpMethod !== 'POST') {
+  // Only allow GET requests
+  if (event.httpMethod !== 'GET') {
     return {
       statusCode: 405,
       headers,
@@ -37,19 +36,16 @@ exports.handler = async function(event, context) {
       body: JSON.stringify({ error: 'Unauthorized' })
     };
   }
-
+  
   try {
-    // Parse request body
-    const data = JSON.parse(event.body);
+    // Get tenant ID from query parameters
+    const tenantId = event.queryStringParameters.id;
     
-    if (!data.tenantId || data.newBalance === undefined) {
+    if (!tenantId) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ 
-          error: 'Bad request', 
-          message: 'Tenant ID and new balance are required' 
-        })
+        body: JSON.stringify({ error: 'Tenant ID is required' })
       };
     }
     
@@ -64,33 +60,14 @@ exports.handler = async function(event, context) {
       };
     }
     
-    // Find the tenant to update
-    const tenantIndex = tenants.findIndex(t => t.id === data.tenantId);
+    // Find the specific tenant
+    const tenant = tenants.find(t => t.id === tenantId);
     
-    if (tenantIndex === -1) {
+    if (!tenant) {
       return {
         statusCode: 404,
         headers,
         body: JSON.stringify({ error: 'Tenant not found' })
-      };
-    }
-    
-    // Update the tenant balance
-    const previousBalance = tenants[tenantIndex].balance;
-    tenants[tenantIndex].previousBalance = previousBalance;
-    tenants[tenantIndex].balance = data.newBalance;
-    tenants[tenantIndex].lastUpdated = new Date().toISOString();
-    
-    // Save updated tenants
-    const saveSuccess = await saveData('customers.json', tenants);
-    
-    if (!saveSuccess) {
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({
-          error: 'Failed to save tenant updates',
-        })
       };
     }
     
@@ -99,13 +76,12 @@ exports.handler = async function(event, context) {
       headers,
       body: JSON.stringify({
         success: true,
-        message: 'Tenant balance updated successfully',
-        tenant: tenants[tenantIndex]
+        tenant: tenant
       })
     };
     
   } catch (error) {
-    console.error('Error updating tenant:', error);
+    console.error('Error getting tenant:', error);
     
     return {
       statusCode: 500,

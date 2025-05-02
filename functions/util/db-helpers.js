@@ -4,6 +4,7 @@ const path = require('path');
 
 // Define the data directory path - using .data in the project root
 const DATA_DIR = path.join(__dirname, '..', '..', '.data');
+const TMP_DIR = path.join('/tmp');
 
 // Ensure the data directory exists
 function ensureDataDirExists() {
@@ -14,12 +15,10 @@ function ensureDataDirExists() {
     } catch (error) {
       console.error('Failed to create data directory:', error);
       // Try alternative location
-      const altDir = path.join('/tmp', 'salang-data');
-      if (!fs.existsSync(altDir)) {
-        fs.mkdirSync(altDir, { recursive: true });
-        console.log('Created alternative data directory at:', altDir);
+      if (!fs.existsSync(TMP_DIR)) {
+        fs.mkdirSync(TMP_DIR, { recursive: true });
       }
-      return altDir;
+      return TMP_DIR;
     }
   }
   return DATA_DIR;
@@ -30,25 +29,26 @@ function ensureDataDirExists() {
  * @param {string} filename - The file name to read from
  * @returns {Promise<any>} - The parsed JSON data
  */
-async function getJsonData(filename) {
+async function getData(filename) {
   const dataDir = ensureDataDirExists();
   const filePath = path.join(dataDir, filename);
+  const tmpFilePath = path.join(TMP_DIR, filename);
   
   try {
-    // Check if file exists
-    if (!fs.existsSync(filePath)) {
-      console.log(`File ${filename} doesn't exist, returning empty array`);
-      return []; // Return empty array for non-existent files
+    // Try main location first
+    if (fs.existsSync(filePath)) {
+      const data = await fs.promises.readFile(filePath, 'utf8');
+      return JSON.parse(data);
     }
     
-    // Read and parse file
-    const data = await fs.promises.readFile(filePath, 'utf8');
-    try {
+    // Try tmp location as fallback
+    if (fs.existsSync(tmpFilePath)) {
+      const data = await fs.promises.readFile(tmpFilePath, 'utf8');
       return JSON.parse(data);
-    } catch (parseError) {
-      console.error(`Error parsing ${filename}:`, parseError);
-      return []; // Return empty array if JSON parsing fails
     }
+    
+    console.log(`File ${filename} doesn't exist, returning empty array`);
+    return []; // Return empty array for non-existent files
   } catch (error) {
     console.error(`Error reading ${filename}:`, error);
     return []; // Return empty array on error
@@ -61,7 +61,7 @@ async function getJsonData(filename) {
  * @param {any} data - The data to save
  * @returns {Promise<boolean>} - Success status
  */
-async function saveJsonData(filename, data) {
+async function saveData(filename, data) {
   const dataDir = ensureDataDirExists();
   const filePath = path.join(dataDir, filename);
   
@@ -79,7 +79,7 @@ async function saveJsonData(filename, data) {
     
     // Try writing to alternative location
     try {
-      const tmpPath = path.join('/tmp', filename);
+      const tmpPath = path.join(TMP_DIR, filename);
       await fs.promises.writeFile(
         tmpPath,
         JSON.stringify(data, null, 2),
@@ -95,6 +95,6 @@ async function saveJsonData(filename, data) {
 }
 
 module.exports = {
-  getJsonData,
-  saveJsonData
+  getData,
+  saveData
 };
