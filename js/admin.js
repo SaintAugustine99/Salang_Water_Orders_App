@@ -714,3 +714,51 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 });
+
+// Add this code in the initializeCustomersData() function in js/admin.js
+async function initializeCustomersData() {
+  const user = netlifyIdentity.currentUser();
+  if (!user) {
+      console.error('No authenticated user found for initializing customers');
+      return false;
+  }
+  
+  try {
+      console.log('Attempting to initialize customers data...');
+      const token = await user.jwt();
+      
+      // First, try the GET endpoint to check if data already exists
+      const checkResponse = await fetch('/.netlify/functions/init-customers', {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      });
+      
+      console.log('Check response status:', checkResponse.status);
+      const checkData = await checkResponse.json();
+      console.log('Check data:', checkData);
+      
+      // Then, initialize if needed
+      const response = await fetch('/.netlify/functions/init-customers', {
+          method: 'POST',
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      });
+      
+      console.log('Init response status:', response.status);
+      
+      if (!response.ok) {
+          console.error('Failed to initialize customers data:', response.status);
+          return false;
+      }
+      
+      const data = await response.json();
+      console.log('Customers data initialized:', data);
+      return true;
+  } catch (error) {
+      console.error('Error initializing customers data:', error);
+      return false;
+  }
+}

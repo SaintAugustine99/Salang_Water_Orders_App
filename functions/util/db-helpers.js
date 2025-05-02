@@ -98,3 +98,25 @@ module.exports = {
   getData,
   saveData
 };
+
+// Add this to functions/util/db-helpers.js
+const DEBUG = true;
+
+function debugLog(...args) {
+  if (DEBUG) {
+    console.log('[DEBUG]', ...args);
+  }
+}
+
+// Export it
+module.exports = {
+  getData,
+  saveData,
+  debugLog
+};
+
+// Then use it in your functions
+const { getData, saveData, debugLog } = require('./util/db-helpers');
+
+// Use it like:
+debugLog('Attempting to save order:', orderData);
