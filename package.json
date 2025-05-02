@@ -1,0 +1,23 @@
+{
+  "name": "salang-water-refill",
+  "version": "1.0.0",
+  "description": "Salang Water Refill Order App",
+  "main": "index.js",
+  "scripts": {
+    "dev": "netlify dev",
+    "start": "netlify dev"
+  },
+  "keywords": [
+    "water",
+    "delivery",
+    "netlify"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "netlify-cli": "^12.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {}
+}
