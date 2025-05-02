@@ -395,3 +395,261 @@ document.addEventListener('DOMContentLoaded', function() {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 });
+
+// Add to admin.js
+// Tab switching functionality
+document.querySelectorAll('.tab-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      // Remove active class from all tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Hide all tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.style.display = 'none';
+      });
+      
+      // Show selected tab
+      const tabName = this.getAttribute('data-tab');
+      document.getElementById(tabName + '-tab').style.display = 'block';
+      this.classList.add('active');
+      
+      // Load content for the tab
+      if (tabName === 'tenants') {
+        loadTenants();
+      }
+    });
+  });
+  
+  // Load tenants from API
+  function loadTenants() {
+    const user = netlifyIdentity.currentUser();
+    if (!user) return;
+    
+    const tenantsDataElement = document.getElementById('tenants-data');
+    const loadingIndicator = document.getElementById('loading-tenants');
+    
+    // Show loading state
+    tenantsDataElement.innerHTML = '';
+    loadingIndicator.style.display = 'flex';
+    
+    user.jwt().then(token => {
+      fetch('/.netlify/functions/get-tenants', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        displayTenants(data.tenants);
+        loadingIndicator.style.display = 'none';
+      })
+      .catch(error => {
+        console.error('Error loading tenants:', error);
+        loadingIndicator.style.display = 'none';
+        tenantsDataElement.innerHTML = `<tr><td colspan="6" class="error-message">Error: ${error.message}</td></tr>`;
+      });
+    });
+  }
+  
+  // Display tenants in the table
+  function displayTenants(tenants) {
+    if (!tenants || tenants.length === 0) {
+      document.getElementById('tenants-data').innerHTML = '<tr><td colspan="6">No tenants found</td></tr>';
+      return;
+    }
+    
+    // Apply filters
+    const groupFilter = document.getElementById('group-filter').value;
+    const searchTerm = document.getElementById('tenant-search').value.toLowerCase();
+    
+    const filteredTenants = tenants.filter(tenant => {
+      // Group filter
+      if (groupFilter !== 'all' && tenant.group !== groupFilter) {
+        return false;
+      }
+      
+      // Search filter
+      if (searchTerm && !tenant.name.toLowerCase().includes(searchTerm) && 
+          !tenant.id.toLowerCase().includes(searchTerm)) {
+        return false;
+      }
+      
+      return true;
+    });
+    
+    // Sort by ID
+    filteredTenants.sort((a, b) => a.id.localeCompare(b.id));
+    
+    // Generate table rows
+    const tableBody = document.getElementById('tenants-data');
+    tableBody.innerHTML = '';
+    
+    filteredTenants.forEach(tenant => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${tenant.id}</td>
+        <td>${tenant.name}</td>
+        <td>${tenant.phone}</td>
+        <td>${tenant.previousBalance || '-'}</td>
+        <td>${tenant.balance}</td>
+        <td>
+          <button class="action-btn edit-btn" data-id="${tenant.id}">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
+    
+    // Add event listeners for edit buttons
+    document.querySelectorAll('.edit-btn').forEach(button => {
+      button.addEventListener('click', () => editTenant(button.getAttribute('data-id')));
+    });
+  }
+  
+  // Show tenant edit modal
+  function editTenant(tenantId) {
+    const user = netlifyIdentity.currentUser();
+    if (!user) return;
+    
+    user.jwt().then(token => {
+      fetch(`/.netlify/functions/get-tenant?id=${tenantId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.tenant) {
+          showTenantEditModal(data.tenant);
+        } else {
+          alert('Tenant not found');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching tenant details:', error);
+        alert(`Error: ${error.message}`);
+      });
+    });
+  }
+  
+  // Create and show tenant edit modal
+  function showTenantEditModal(tenant) {
+    // Create modal HTML
+    const modalHtml = `
+      <div id="tenant-edit-modal" class="modal">
+        <div class="modal-content">
+          <span class="close-modal">&times;</span>
+          <h3>Edit Tenant: ${tenant.name}</h3>
+          
+          <div class="form-group">
+            <label>Tenant ID:</label>
+            <input type="text" id="edit-tenant-id" value="${tenant.id}" disabled>
+          </div>
+          
+          <div class="form-group">
+            <label>Name:</label>
+            <input type="text" id="edit-tenant-name" value="${tenant.name}" disabled>
+          </div>
+          
+          <div class="form-group">
+            <label>Phone:</label>
+            <input type="text" id="edit-tenant-phone" value="${tenant.phone}" disabled>
+          </div>
+          
+          <div class="form-group">
+            <label>Previous Balance:</label>
+            <input type="text" id="edit-tenant-previous" value="${tenant.previousBalance || tenant.balance}" disabled>
+          </div>
+          
+          <div class="form-group">
+            <label>Current Balance:</label>
+            <input type="number" id="edit-tenant-balance" value="${tenant.balance}">
+          </div>
+          
+          <button id="save-tenant-btn" class="save-btn">Save Changes</button>
+        </div>
+      </div>
+    `;
+    
+    // Add modal to page
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    const modal = document.getElementById('tenant-edit-modal');
+    const closeBtn = modal.querySelector('.close-modal');
+    const saveBtn = document.getElementById('save-tenant-btn');
+    
+    // Show modal
+    modal.style.display = 'block';
+    
+    // Close modal when clicking X
+    closeBtn.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
+    
+    // Save button functionality
+    saveBtn.addEventListener('click', () => {
+      const newBalance = document.getElementById('edit-tenant-balance').value;
+      
+      if (!newBalance || isNaN(newBalance)) {
+        alert('Please enter a valid balance amount');
+        return;
+      }
+      
+      updateTenantBalance(tenant.id, parseFloat(newBalance), modal);
+    });
+  }
+  
+  // Update tenant balance
+  function updateTenantBalance(tenantId, newBalance, modal) {
+    const user = netlifyIdentity.currentUser();
+    if (!user) return;
+    
+    user.jwt().then(token => {
+      fetch('/.netlify/functions/update-tenant-bill', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          tenantId,
+          newBalance
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert('Tenant balance updated successfully');
+        document.body.removeChild(modal);
+        loadTenants(); // Refresh the list
+      })
+      .catch(error => {
+        console.error('Error updating tenant:', error);
+        alert(`Error: ${error.message}`);
+      });
+    });
+  }

@@ -1,2 +1,10 @@
 # Local Netlify folder
 .netlify
+.env
+.env.local
+.env.development
+node_modules/
+.data/
+# Any files containing customer data
+customers_*.json
+customers_*.csv
