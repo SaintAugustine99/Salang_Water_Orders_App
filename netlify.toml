@@ -1,5 +1,10 @@
 [build]
+  publish = "build"
+  command = "npm run build"
   functions = "functions"
+
+[build.environment]
+  NODE_VERSION = "18"
 
 [[redirects]]
   from = "/api/*"
