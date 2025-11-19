@@ -1,4 +1,5 @@
 [build]
+  base = "salang_water"
   publish = "build"
   command = "npm run build"
   functions = "functions"
