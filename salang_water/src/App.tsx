@@ -24,7 +24,7 @@ function App() {
   // State Management
   const [activePage, setActivePage] = useState('home');
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cart,HB setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   // Persist cart to local storage
   useEffect(() => {
@@ -59,7 +59,7 @@ function App() {
     
     if (phone && amount > 0) {
       try {
-        // We will create this endpoint in Step 3
+        // FIXED: "const" was typed incorrectly here
         const response = await fetch('/.netlify/functions/mpesa-push', {
           method: 'POST',
           body: JSON.stringify({ phone, amount }),
@@ -86,10 +86,10 @@ function App() {
       case 'about': return <AboutPage />;
       case 'order': return <OrderPage addToCart={addToCart} />;
       case 'custom': return <CustomOrdersPage />;
-      case 'contact': return <ContactPage />; // We will update this for email
+      case 'contact': return <ContactPage />;
       case 'cart': 
         setIsCartOpen(true);
-        return <OrderPage addToCart={addToCart} />; // Fallback to order page underneath
+        return <OrderPage addToCart={addToCart} />;
       default: return <HomePage setPage={setActivePage} />;
     }
   };
