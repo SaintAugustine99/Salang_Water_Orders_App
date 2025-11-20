@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 // Component Imports
-import Navigation from './Navigation';
-import Footer from './Footer';
-import CartDrawer from './CartDrawer';
-import HomePage from './HomePage';
-import AboutPage from './AboutPage';
-import OrderPage from './OrderPage';
-import CustomOrdersPage from './CustomOrdersPage';
-import ContactPage from './ContactPage';
-import CareersPage from './CareersPage';
-import TermsPage from './TermsPage';
+import Navigation from './pages/Navigation';
+import Footer from './pages/Footer';
+import CartDrawer from './pages/CartDrawer';
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import OrderPage from './pages/OrderPage';
+import CustomOrdersPage from './pages/CustomOrdersPage';
+import ContactPage from './pages/ContactPage';
+import CareersPage from './pages/CareersPage';
+import TermsPage from './pages/TermsPage';
 
 // Types
 interface CartItem {
