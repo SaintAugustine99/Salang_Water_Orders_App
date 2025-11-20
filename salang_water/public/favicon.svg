@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60A5FA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563EB;stop-opacity:1" />
+    </linearGradient>
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10" />
+      <feOffset dx="5" dy="5" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <path d="M256 64C256 64 64 260 64 368C64 474.05 149.95 560 256 560C362.05 560 448 474.05 448 368C448 260 256 64 256 64Z" 
+        transform="translate(0, -48) scale(1)" 
+        fill="url(#grad1)" 
+        filter="url(#dropShadow)" />
+  <path d="M320 320C320 320 300 300 280 300C260 300 256 320 256 320" 
+        stroke="white" 
+        stroke-width="20" 
+        stroke-linecap="round" 
+        fill="none" 
+        opacity="0.4" 
+        transform="translate(-20, 20)" />
+</svg>
