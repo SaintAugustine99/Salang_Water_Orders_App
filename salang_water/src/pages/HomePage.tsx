@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight, CheckCircle, Recycle, Heart, Droplets, ShieldCheck } from 'lucide-react';
+import { ChevronRight, Recycle, Heart, ShieldCheck } from 'lucide-react';
 
 const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
   <div className="animate-fadeIn">

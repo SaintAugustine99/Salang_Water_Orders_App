@@ -13,15 +13,15 @@ const Footer = ({ setPage }: { setPage: (page: string) => void }) => {
               Delivering purity and health to every household. Experience the difference of premium filtration.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-colors text-white">
+              <button className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-colors text-white">
                 <Facebook size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-400 transition-colors text-white">
+              </button>
+              <button className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-400 transition-colors text-white">
                 <Twitter size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 transition-colors text-white">
+              </button>
+              <button className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 transition-colors text-white">
                 <Instagram size={18} />
-              </a>
+              </button>
             </div>
           </div>
 
