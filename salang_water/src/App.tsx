@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import './App.css';
 
 // Component Imports
 import Navigation from './pages/Navigation';
 import Footer from './pages/Footer';
 import CartDrawer from './pages/CartDrawer';
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import OrderPage from './pages/OrderPage';
-import CustomOrdersPage from './pages/CustomOrdersPage';
-import ContactPage from './pages/ContactPage';
-import CareersPage from './pages/CareersPage';
-import TermsPage from './pages/TermsPage';
+
+// Lazy Load Pages
+const HomePage = React.lazy(() => import('./pages/HomePage'));
+const AboutPage = React.lazy(() => import('./pages/AboutPage'));
+const OrderPage = React.lazy(() => import('./pages/OrderPage'));
+const CustomOrdersPage = React.lazy(() => import('./pages/CustomOrdersPage'));
+const ContactPage = React.lazy(() => import('./pages/ContactPage'));
+const CareersPage = React.lazy(() => import('./pages/CareersPage'));
+const TermsPage = React.lazy(() => import('./pages/TermsPage'));
 
 // Types
 interface CartItem {
@@ -123,6 +125,13 @@ function App() {
     }
   };
 
+  // Loading Fallback
+  const PageLoader = () => (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+    </div>
+  );
+
   return (
     <div className="App min-h-screen flex flex-col bg-salang-white font-sans text-slate-800">
       <Navigation
@@ -191,7 +200,9 @@ function App() {
       )}
 
       <main className="flex-grow">
-        {renderPage()}
+        <Suspense fallback={<PageLoader />}>
+          {renderPage()}
+        </Suspense>
       </main>
 
       <Footer setPage={setActivePage} />

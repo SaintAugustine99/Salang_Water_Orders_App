@@ -11,11 +11,10 @@ const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount 
   const [isOpen, setIsOpen] = useState(false);
 
   const NavLink = ({ name, page }: { name: string; page: string }) => (
-    <button 
+    <button
       onClick={() => { setPage(page); setIsOpen(false); }}
-      className={`text-sm font-medium tracking-wide transition-colors duration-300 ${
-        activePage === page ? 'text-blue-600 font-bold' : 'text-slate-600 hover:text-blue-500'
-      }`}
+      className={`text-sm font-medium tracking-wide transition-colors duration-300 ${activePage === page ? 'text-blue-600 font-bold' : 'text-slate-600 hover:text-blue-500'
+        }`}
     >
       {name.toUpperCase()}
     </button>
@@ -43,10 +42,11 @@ const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount 
             <NavLink name="Order Refill" page="order" />
             <NavLink name="Custom Events" page="custom" />
             <NavLink name="Contact" page="contact" />
-            
-            <button 
+
+            <button
               onClick={() => setPage('cart')}
               className="relative p-2 text-slate-600 hover:text-blue-600 transition-colors"
+              aria-label="Shopping Cart"
             >
               <ShoppingBag size={24} />
               {cartCount > 0 && (
@@ -59,9 +59,10 @@ const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount 
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
-            <button 
+            <button
               onClick={() => setPage('cart')}
               className="mr-4 relative text-slate-600"
+              aria-label="Shopping Cart"
             >
               <ShoppingBag size={24} />
               {cartCount > 0 && (
@@ -70,7 +71,7 @@ const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount 
                 </span>
               )}
             </button>
-            <button onClick={() => setIsOpen(!isOpen)} className="text-slate-900">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-slate-900" aria-label="Toggle Menu">
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>

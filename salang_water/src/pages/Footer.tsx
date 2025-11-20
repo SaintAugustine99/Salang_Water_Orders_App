@@ -9,17 +9,17 @@ const Footer = ({ setPage }: { setPage: (page: string) => void }) => {
           {/* Brand */}
           <div>
             <h3 className="text-2xl font-serif font-bold text-white mb-6">Salang Water</h3>
-            <p className="text-slate-400 leading-relaxed mb-6">
+            <p className="text-slate-300 leading-relaxed mb-6">
               Delivering purity and health to every household. Experience the difference of premium filtration.
             </p>
             <div className="flex space-x-4">
-              <button className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-colors text-white">
+              <button aria-label="Facebook" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-colors text-white">
                 <Facebook size={18} />
               </button>
-              <button className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-400 transition-colors text-white">
+              <button aria-label="Twitter" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-400 transition-colors text-white">
                 <Twitter size={18} />
               </button>
-              <button className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 transition-colors text-white">
+              <button aria-label="Instagram" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 transition-colors text-white">
                 <Instagram size={18} />
               </button>
             </div>

@@ -9,8 +9,13 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
       <div className="absolute inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=1920"
+          srcSet="https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=640 640w,
+                  https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=1200 1200w,
+                  https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=1920 1920w"
+          sizes="(max-width: 640px) 100vw, (max-width: 1200px) 100vw, 100vw"
           alt="Pure Water Background"
           className="w-full h-full object-cover"
+          loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/80"></div>
       </div>
@@ -125,7 +130,7 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
 
       <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
         <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-8">Ready to Experience Purity?</h2>
-        <p className="text-xl text-blue-100 mb-12">Join thousands of satisfied customers who trust Salang Water for their daily hydration.</p>
+        <p className="text-xl text-white mb-12">Join thousands of satisfied customers who trust Salang Water for their daily hydration.</p>
         <button
           onClick={() => setPage('order')}
           className="px-12 py-5 bg-white text-blue-600 rounded-full font-bold text-xl hover:bg-blue-50 transition-colors shadow-xl"

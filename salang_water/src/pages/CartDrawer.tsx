@@ -19,20 +19,20 @@ interface CartDrawerProps {
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, cart, setCart, onCheckout }) => {
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  
+
   return (
     <div className={`fixed inset-0 z-[60] ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
       {/* Backdrop */}
-      <div 
-        className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`} 
+      <div
+        className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
         onClick={onClose}
       />
-      
+
       {/* Drawer */}
       <div className={`absolute top-0 right-0 w-full max-w-md h-full bg-white shadow-2xl transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col`}>
         <div className="p-6 border-b border-slate-100 flex justify-between items-center">
           <h2 className="text-xl font-bold font-serif">Your Cart</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
+          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full" aria-label="Close Cart">
             <X size={24} />
           </button>
         </div>
@@ -52,13 +52,13 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, cart, setCart,
                   <p className="text-blue-600 font-medium text-sm">KES {item.price}</p>
                 </div>
                 <div className="flex items-center bg-slate-50 rounded-lg">
-                  <button className="px-3 py-1 hover:bg-slate-200 rounded-l-lg" onClick={() => {
-                    const newCart = cart.map(i => i.id === item.id ? {...i, qty: Math.max(0, i.qty - 1)} : i).filter(i => i.qty > 0);
+                  <button className="px-3 py-1 hover:bg-slate-200 rounded-l-lg" aria-label="Decrease Quantity" onClick={() => {
+                    const newCart = cart.map(i => i.id === item.id ? { ...i, qty: Math.max(0, i.qty - 1) } : i).filter(i => i.qty > 0);
                     setCart(newCart);
                   }}>-</button>
                   <span className="px-2 text-sm font-bold">{item.qty}</span>
-                  <button className="px-3 py-1 hover:bg-slate-200 rounded-r-lg" onClick={() => {
-                    const newCart = cart.map(i => i.id === item.id ? {...i, qty: i.qty + 1} : i);
+                  <button className="px-3 py-1 hover:bg-slate-200 rounded-r-lg" aria-label="Increase Quantity" onClick={() => {
+                    const newCart = cart.map(i => i.id === item.id ? { ...i, qty: i.qty + 1 } : i);
                     setCart(newCart);
                   }}>+</button>
                 </div>
@@ -76,8 +76,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, cart, setCart,
             <span>Total</span>
             <span>KES {subtotal}</span>
           </div>
-          <button 
-            onClick={onCheckout} 
+          <button
+            onClick={onCheckout}
             className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200 transition-all"
           >
             Proceed to Checkout
