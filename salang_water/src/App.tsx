@@ -84,9 +84,6 @@ function App() {
       case 'contact': return <ContactPage />;
       case 'careers': return <CareersPage />;
       case 'terms': return <TermsPage />;
-      case 'cart':
-        setIsCartOpen(true);
-        return <OrderPage addToCart={addToCart} />;
       default: return <HomePage setPage={setActivePage} />;
     }
   };
@@ -104,6 +101,7 @@ function App() {
         activePage={activePage}
         setPage={setActivePage}
         cartCount={cart.reduce((acc, item) => acc + item.qty, 0)}
+        onOpenCart={() => setIsCartOpen(true)}
       />
 
       <CartDrawer

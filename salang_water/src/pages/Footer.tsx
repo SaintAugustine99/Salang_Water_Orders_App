@@ -66,11 +66,11 @@ const Footer = ({ setPage }: { setPage: (page: string) => void }) => {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <MapPin size={20} className="mr-3 text-blue-500 shrink-0" />
-                <span>123 Water Lane, Industrial Area, Nairobi, Kenya</span>
+                <span>Utawala MC area, Nairobi, Kenya</span>
               </li>
               <li className="flex items-center">
                 <Phone size={20} className="mr-3 text-blue-500 shrink-0" />
-                <span>+254 712 345 678</span>
+                <span>+254 742 835 007</span>
               </li>
               <li className="flex items-center">
                 <Mail size={20} className="mr-3 text-blue-500 shrink-0" />

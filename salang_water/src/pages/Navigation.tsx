@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Droplets, ShoppingBag, Menu, X } from 'lucide-react';
+import { ShoppingBag, Menu, X } from 'lucide-react';
+import logo from './logo.png';
 
 interface NavigationProps {
   activePage: string;
   setPage: (page: string) => void;
   cartCount: number;
+  onOpenCart: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount }) => {
+const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount, onOpenCart }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const NavLink = ({ name, page }: { name: string; page: string }) => (
@@ -26,13 +28,7 @@ const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount 
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => setPage('home')}>
-            <div className="w-10 h-10 bg-blue-600 rounded-tl-xl rounded-br-xl flex items-center justify-center text-white mr-3">
-              <Droplets size={24} fill="currentColor" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-serif font-bold text-slate-900 tracking-tight">Salang Water</h1>
-              <p className="text-[10px] text-blue-600 font-medium tracking-widest uppercase">Pure & Sustainable</p>
-            </div>
+            <img src={logo} alt="Salang Water" className="h-16 w-auto object-contain" />
           </div>
 
           {/* Desktop Menu */}
@@ -44,7 +40,7 @@ const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount 
             <NavLink name="Contact" page="contact" />
 
             <button
-              onClick={() => setPage('cart')}
+              onClick={onOpenCart}
               className="relative p-2 text-slate-600 hover:text-blue-600 transition-colors"
               aria-label="Shopping Cart"
             >
@@ -60,7 +56,7 @@ const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button
-              onClick={() => setPage('cart')}
+              onClick={onOpenCart}
               className="mr-4 relative text-slate-600"
               aria-label="Shopping Cart"
             >
