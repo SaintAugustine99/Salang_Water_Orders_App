@@ -14,42 +14,42 @@ const PRODUCTS = [
   {
     id: 2,
     name: "20L New Bottle + Water",
-    price: 500,
+    price: 400,
     type: 'new',
     image: "https://images.unsplash.com/photo-1616118132534-381148898bb4?auto=format&fit=crop&q=80&w=600&h=800",
     description: "Purchase a brand new 20L bottle filled with Salang Water."
   },
   {
     id: 3,
-    name: "10L Disposable (6-Pack)",
-    price: 350,
+    name: "10L Bottle",
+    price: 200,
     type: 'pack',
     image: "https://images.unsplash.com/photo-1625740822008-e45a8a9d1691?auto=format&fit=crop&q=80&w=600&h=800",
-    description: "Convenient 10L pack for events or travel."
+    description: "Convenient 10L bottle for events or travel."
   },
   {
     id: 4,
-    name: "5L Family Pack",
-    price: 250,
+    name: "5L Bottle Crate of 4",
+    price: 400,
     type: 'pack',
     image: "https://images.unsplash.com/photo-1603393001288-4b3177c9a471?auto=format&fit=crop&q=80&w=600&h=800",
-    description: "Perfect size for daily family consumption."
+    description: "Crate of 4 x 5L bottles."
   },
   {
     id: 5,
-    name: "1L Bottle (Case of 12)",
-    price: 600,
+    name: "1L Bottle Crate of 12",
+    price: 450,
     type: 'pack',
     image: "https://images.unsplash.com/photo-1602143407151-11115cdbf6e0?auto=format&fit=crop&q=80&w=600&h=800",
-    description: "On-the-go hydration for the office or gym."
+    description: "Crate of 12 x 1L bottles."
   },
   {
     id: 6,
-    name: "500ml Bottle (Case of 24)",
-    price: 800,
+    name: "500ml Bottle Crate of 24",
+    price: 450,
     type: 'pack',
     image: "https://images.unsplash.com/photo-1559839914-17a54a96660e?auto=format&fit=crop&q=80&w=600&h=800",
-    description: "Ideal for meetings, parties, and events."
+    description: "Crate of 24 x 500ml bottles."
   },
   {
     id: 7,
