@@ -79,6 +79,9 @@ const OrderPage = ({ addToCart }: { addToCart: (product: any) => void }) => {
                 src={product.image}
                 alt={product.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                width="600"
+                height="800"
+                loading="lazy"
               />
               <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full text-sm font-bold text-slate-900 shadow-sm">
                 KES {product.price}

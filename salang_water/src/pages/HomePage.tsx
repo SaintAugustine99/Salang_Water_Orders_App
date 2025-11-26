@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight, Recycle, Heart, ShieldCheck } from 'lucide-react';
+import { ChevronRight, Leaf, Users, Award } from 'lucide-react';
 
 const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
   <div className="animate-fadeIn">
@@ -12,10 +12,13 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
           srcSet="https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=640 640w,
                   https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=1200 1200w,
                   https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=1920 1920w"
-          sizes="(max-width: 640px) 100vw, (max-width: 1200px) 100vw, 100vw"
+          sizes="100vw"
           alt="Pure Water Background"
           className="w-full h-full object-cover"
           loading="eager"
+          fetchPriority="high"
+          width="1920"
+          height="1080"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/80"></div>
       </div>
@@ -61,7 +64,7 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
 
     {/* Stats Section */}
     <section className="py-20 bg-white relative z-10 -mt-10 rounded-t-[3rem] shadow-xl">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-[95%] mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
           <div>
             <div className="text-4xl font-bold text-blue-600 mb-2">10k+</div>
@@ -81,7 +84,7 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
 
     {/* Features Grid */}
     <section className="py-24 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-[95%] mx-auto px-6">
         <div className="text-center mb-20">
           <h2 className="text-4xl font-serif font-bold text-slate-900 mb-6">Why Choose Salang?</h2>
           <div className="w-20 h-1 bg-blue-600 mx-auto rounded-full"></div>
@@ -90,7 +93,7 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div className="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-100">
             <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-              <ShieldCheck size={40} />
+              <Award size={40} />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">KEBS Certified</h3>
             <p className="text-slate-600 leading-relaxed">
@@ -100,7 +103,7 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
 
           <div className="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-100">
             <div className="w-20 h-20 bg-green-50 text-green-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-              <Recycle size={40} />
+              <Leaf size={40} />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Eco-Cycle System</h3>
             <p className="text-slate-600 leading-relaxed">
@@ -110,7 +113,7 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
 
           <div className="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-100">
             <div className="w-20 h-20 bg-purple-50 text-purple-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-              <Heart size={40} />
+              <Users size={40} />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Community Focus</h3>
             <p className="text-slate-600 leading-relaxed">

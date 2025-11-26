@@ -28,7 +28,7 @@ const Navigation: React.FC<NavigationProps> = ({ activePage, setPage, cartCount,
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => setPage('home')}>
-            <img src={logo} alt="Salang Water" className="h-16 w-auto object-contain" />
+            <img src={logo} alt="Salang Water" className="h-16 w-auto object-contain" width="150" height="64" />
           </div>
 
           {/* Desktop Menu */}
