@@ -1,0 +1,49 @@
+[build]
+  base = "salang_water"
+  publish = "build"
+  command = "npm run build"
+  functions = "functions"
+
+[build.environment]
+  NODE_VERSION = "18"
+  REACT_APP_NODE_ENV = "production"
+
+# Dev server settings for local development
+[dev]
+  command = "npm start"
+  port = 3000
+  publish = "build"
+  functions = "functions"
+
+# API redirects for serverless functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# SPA fallback for React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Service Worker
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache"
