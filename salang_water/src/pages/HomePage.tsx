@@ -92,7 +92,7 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div className="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-100">
-            <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
+            <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300 mx-auto">
               <Award size={40} />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">KEBS Certified</h3>
@@ -102,7 +102,7 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
           </div>
 
           <div className="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-100">
-            <div className="w-20 h-20 bg-green-50 text-green-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
+            <div className="w-20 h-20 bg-green-50 text-green-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300 mx-auto">
               <Leaf size={40} />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Eco-Cycle System</h3>
@@ -112,7 +112,7 @@ const HomePage = ({ setPage }: { setPage: (page: string) => void }) => (
           </div>
 
           <div className="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-100">
-            <div className="w-20 h-20 bg-purple-50 text-purple-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
+            <div className="w-20 h-20 bg-purple-50 text-purple-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300 mx-auto">
               <Users size={40} />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Community Focus</h3>
